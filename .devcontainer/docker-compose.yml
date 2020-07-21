@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - ..:/workspace:cached
+      # - ~/.gitconfig:/root/.gitconfig
+      # - ~/.ssh:/root/.ssh
+    tmpfs:
+      - /usr/src/app/tmp
+    environment:
+      - BINDING=0.0.0.0
+      - PORT=3000
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+  database:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    expose:
+      - '5432'
+    volumes:
+      - "database:/var/lib/postgresql/data"
+
+volumes:
+  database:
